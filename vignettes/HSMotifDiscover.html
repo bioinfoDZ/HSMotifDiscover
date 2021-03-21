@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Vinod Kumar Singh and Deyou Zheng" />
+
+
+<title>HSMotifDiscover</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">HSMotifDiscover</h1>
+<h4 class="author">Vinod Kumar Singh and Deyou Zheng</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">1. Introduction:</a></li>
+<li><a href="#concept">2. Concept:</a></li>
+<li><a href="#availability-and-installation">3. Availability and Installation</a></li>
+<li><a href="#functions">4. Functions</a><ul>
+<li><a href="#hsmotifdiscover">4.1 HSMotifDiscover</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level2">
+<h2>1. Introduction:</h2>
+<p>Motif discovery from a given set of linear sequences is a common computational problem. Many motif discovery tools and software are available for finding motifs in DNA, RNA and protein sequences. These software find motifs significantly enriched in the sequences composed of single alphabet letters. However, motifs in some other biological contents may not be consisted of single letters, for example, chemical modifications on DNA or proteins. Here, we describe our “HSMotifDiscover” tool that utilizes Gibbs Sampling algorithm to find motifs in heparan sulphate (HS) sequences. HS sequences are linear glycans of repeating disaccharides composed of hexuronic acids and N-acetyle-glucosamines and added to membrane or extracellular proteins to form specific proteoglycans. Further sulphate modifications on the hexuronic acids and glucosamines generate HS motifs that are responsible for the functions of HS sequences. Therefore, HS sequences are different from the nucleic or protein sequences in at least three ways:</p>
+<ul>
+<li><code></code> Each position is composed of a saccharide that can be modified in either one or two ways, resulting in a two- (“dimer”) or three-letter (“trimer”) representation for the types of saccharide and the chemical modifications.</li>
+<li><code></code> The dimer and trimer are present alternatively as disaccharides in the HS sequences.</li>
+<li><code></code> The motifs may be consisted of either same HS residues/types or same chemical modifications on different HS residues.</li>
+</ul>
+<p>HSMotifDiscover tool considers these unique properties in searching for enriched motifs in HS sequences. It first maps the saccharides to “Lawrence codes” and then to alphabet letter. Motif search occurs in the linear alphabet space and the resultant motifs are converted back to the Lawrence codes for a logo visualization. In addition, we also consider the scenario that the input HS sequences may come with scores or weights. Similar to how DNA microarrays have been used to define DNA motifs bound to transcription factors experimentally, array technology has also been developed to help define HS motifs recognized by specific proteins, including antibodies. The array assays yield an affinity score for each of the short HS sequences that are synthesized and printed on the array. The affinity profiles are then used to define HS motifs. Thus, when available, HSMotifDiscover tool will use the binding affinity scores to weight the HS sequences to find the enriched motifs for a given antibody or protein, using either the full spectrum of affinity scores or a predefined threshold to binarizing the input sequences to protein-bound and unbound (background) sequences.</p>
+<p>However, the HSMotifDiscover algorithm is not limited to HS sequences only. It can be used for other glycan sequences. Moreover, we have implemented it in a way that the tool can actually be used to discover motifs in any kind of linear sequences, from simple cases like DNA, RNA, protein sequences to more specific cases where the sequences can be composed of either non-standard alphabet or words that represent dimers, trimers or any combination of letters. Furthermore, to facilitate its usage, we have also developed an interactive R Shiny App (<a href="https://hsmotifdiscover.shinyapps.io/HSMotifDiscover_ShinyApp/" class="uri">https://hsmotifdiscover.shinyapps.io/HSMotifDiscover_ShinyApp/</a>), which can be used by experimental biologists and others to find any type of motifs.</p>
+</div>
+<div id="concept" class="section level2">
+<h2>2. Concept:</h2>
+<p>The HS sequences are diffrent from DNA, RNA and protein sequences in a few ways. So, the Gibbs-Sampling algorithm has been implemented in such a way, it can discover motifs in the heparan sulphate (HS) sequences.</p>
+</div>
+<div id="availability-and-installation" class="section level2">
+<h2>3. Availability and Installation</h2>
+<p>The development version of <code>HSMotifDiscover</code> package is available at <a href="https://github.com/bioinfoDZ/HSMotifDiscover" class="uri">https://github.com/bioinfoDZ/HSMotifDiscover</a> and can be installed as</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># install.packages(&quot;devtools&quot;)</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;bioinfoDZ/HSMotifDiscover&quot;</span>,<span class="dt">build_vignettes =</span> <span class="ot">FALSE</span> )</a></code></pre></div>
+</div>
+<div id="functions" class="section level2">
+<h2>4. Functions</h2>
+<div id="hsmotifdiscover" class="section level3">
+<h3>4.1 HSMotifDiscover</h3>
+<p><strong>Description</strong></p>
+<p>Discovers motif in heparan sulphate sequences or any other type of sequences.</p>
+<p><strong>Usage</strong></p>
+<p><code>HSMotifDiscover(input_HSseq_file, motif_range,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)</code></p>
+<p><strong>Arguments </strong></p>
+<ul>
+<li><code>input_HSseq_file</code>: A heparin sulphate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.</li>
+<li><code>motifLenVec</code>: Describe a vector of the motif lenghts to be discovered.</li>
+<li><code>charGrpFile</code>: (<em>Optional parameter</em>) File having two columns , <strong>One</strong>- dimers/trimers/tetramers that should be considered as single characters to discover motif, <strong>Two</strong>- character group information in numeric form. In heparin sulphate dimer and trimer occupy alternate positions are. So, dimers are grouped in one group and trimers are grouped in other group. If this file is not given then each character will be considered independently to discover motif similar to other available motif discovery tools such as <a href="https://meme-suite.org/meme/tools/meme">MEME</a>. However, this tool has advantage over MEME discovery tool that it can be used for any type of characters.</li>
+<li><code>seq_weight_file</code>: (<em>Optional parameter</em>) File having column of sequence header and sequence weight in motif discovery. If this file is not selected then all sequences have equal weight in motif discovery.</li>
+<li><code>numCores</code> (<em>Optional parameter</em>) the number of cores to be used. This feature is useful when motif is discovered in large range. <strong>In the current version, multiple cores feature will not work on windows computer or RStudio environment.</strong></li>
+<li><code>affinity_threshold</code>: (<em>Optional parameter</em>) The sequences with weight greater than the threshold are used for motif discovery. This is required only of weight file is given.</li>
+<li><code>itr</code>: (<em>Optional parameter</em>) Number of iterations for gibbs sampling optimisation. Higher itrations may improve the results but at the cost of time.</li>
+</ul>
+<p><strong>Value</strong></p>
+<ol style="list-style-type: decimal">
+<li>A list of following parameters of all the discovered motifs in the given range.
+<ul>
+<li><code>PSSM:</code> Position specific scoring matrix of the discovered motif.</li>
+<li><code>MotifEntropy:</code> Average entropy of discovered motif.</li>
+<li><code>IC:</code> Information content of the discovered motif.</li>
+<li><code>bkgProb_vec:</code> Probability vector of the characters in the background sequences.</li>
+<li><code>motif_Pval:</code> P-Value of the discovered motif.</li>
+<li><code>CharDataf:</code> Summary of the input sequences characters.</li>
+<li><code>orgChar_discoveredMotifs:</code> Sequences of the discovered motif.</li>
+<li><code>MotifLogo:</code> Discovered motif seqlogo.</li>
+<li><code>resultsTable_df:</code> Results of the discovered motif are summarised in the data frame. Where columns have following information.
+<ul>
+<li><code>header:</code> header of the sequences used for motif discovery <code>seqLen:</code> sequence length</li>
+<li><code>if sequence weight is greater than the threshold:</code> boolean (TRUE/FALSE). This column is present only of weight of the sequences is given as input. <code>max_score:</code> Maximum likelihood score of the of the PSSM in the sequnce.</li>
+<li><code>P_value:</code> The probability that a random sequence (with the same length and conforming to the background) would have position p-values such that the product is smaller or equal to the value calculated for the sequence under test.</li>
+<li><code>MotifLoc:</code> Start point of discovered motif. (This is the location max_score )</li>
+<li><code>seq_weights:</code> Input weights of the sequnces. This column is present only of weight of the sequences is given as input.</li>
+<li><code>score:</code> Liklihood score of the PSSM at different sequence locations.</li>
+</ul></li>
+</ul></li>
+<li><code>MotifSummary_runTime_*.txt:</code> Summary of motifs in the text file.</li>
+<li><code>log_runTime_*.txt:</code> log file of the run.</li>
+</ol>
+<p><strong>Examples</strong></p>
+<pre><code>&gt; HSSeq_file=system.file(&quot;extdata&quot;, &quot;Ex_simulated_HSseqs_new_M1c_and_M3c_S100E.txt&quot;, 
+                        package = &quot;HSMotifDiscover&quot;, mustWork = TRUE)
+&gt; charGrpFile=system.file(&quot;extdata&quot;, &quot;Chars.txt&quot;, package = &quot;HSMotifDiscover&quot;, mustWork = TRUE)
+&gt; seq_weight_file=system.file(&quot;extdata&quot;, &quot;motif1c_Weight.txt&quot;, 
+                      package = &quot;HSMotifDiscover&quot;, mustWork = TRUE)
+&gt; motifLenVec=c(5,7)   # motif length range
+&gt; out=HSMotifDiscover(input_HSseq_file=HSSeq_file, motifLenVec=motifLenVec, 
+                      charGrpFile=charGrpFile, seq_weight_file=seq_weight_file, 
+                      numCores=1,  affinity_threshold=0,  itr=40000)</code></pre>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

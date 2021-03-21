@@ -1,0 +1,17 @@
+Chars	CharGroup
+IO	1
+GO	1
+I2	1
+G2	1
+Ao0	2
+Ao6	2
+A30	2
+A36	2
+Ho0	2
+Ho6	2
+H30	2
+H36	2
+So0	2
+So6	2
+S30	2
+S36	2

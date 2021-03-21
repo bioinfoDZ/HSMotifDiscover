@@ -1,0 +1,6 @@
+[1] " in > HSMotifDiscover"
+[1] ">>>C4"
+[1] " in > CompileResults"
+[1] " in > mainCode"
+[1] "/Library/Frameworks/R.framework/Versions/3.6/Resources/library/HSMotifDiscover/extdata/motif1c_Weight.txt"
+[1] 190

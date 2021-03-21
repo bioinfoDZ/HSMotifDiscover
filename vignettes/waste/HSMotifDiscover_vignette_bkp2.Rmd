@@ -1,0 +1,96 @@
+---
+title: "HSMotifDiscover"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{HSMotifDiscover}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+---
+  title: "Package 'HSMotifDiscover'"
+author: "Vinod Kumar Singh, Yang Liu and Deyou Zheng "
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+  keep_tex: yes
+latex_engine: pdflatex
+html_document:
+  df_print: paged
+header-includes:
+  - \usepackage{setspace}\singlespacing
+- \usepackage{float}
+linkcolor: blue
+abstract: "| . \n| **Title**: HSMotifDiscover \n| **Type**: Package \n| **Version**: 1.0.0
+
+  \n| **Description**: Discover motif in heparan sulphate sequences or any type of sequnces. \n| **Author**: Vinod Kumar Singh and Deyou Zheng  \n| **Maintainer**: The package maintainer <vinodsinghjnu@gmail.com>
+  \n| **License**:  MIT + file LICENSE\\ \n| **Encoding**: UTF-8\n| **LazyData**:
+  true\n| **Depends**: R (>= 3.6.2), plyr, plotrix, tools, rgl, scatterplot3d. \n| **RoxygenNote**: 7.0.2 \n|
+  **Suggests**:devtools, knitr, rmarkdown.  \n| **VignetteBuilder**: knitr.  \n| **URL**:
+  https://github.com/bioinfoDZ/HSMotifDiscover \n| **BugReports**: https://github.com/bioinfoDZ/HSMotifDiscover/issues "
+vignette: |
+
+  %\VignetteIndexEntry{Vignette HSMotifDiscover} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
+---
+
+  \newpage
+\tableofcontents
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE,comment = "#>")
+```
+
+
+## 1. Introduction:
+Visualization in three-dimensional (3D) space is a standard and critical process for examining the complex structure of high dimensional data. Stereo imaging technology can be adopted to enhance 3D representation of any complex data, especially those consisting mostly of points and lines. We illustrate the simple steps that are involved and strongly encourage others to implement it in their own visualization software. To facilitate its application, we have also created a new software that can convert a regular 3D scatterplot or network figure to a stereo image
+
+## 2. Concept:
+When 2D-image of original data and the slightly rotated data are viewed side by side a 3D illusion is created due to two perspectives of the same object.
+
+
+## 3. Availability and Installation
+  The development version of `Stereo3D` package is available at https://github.com/bioinfoDZ/Stereo3D  and can be installed as
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("bioinfoDZ/HSMotifDiscover",build_vignettes = FALSE )
+```
+
+## 4. Functions
+
+### 4.1  Stereo3D
+
+**Description**
+
+Discover motif in heparan sulphate sequences or any type of sequnces.
+
+**Usage**
+
+`HSMotifDiscover(input_HSseq_file, motif_range,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)`
+
+**Arguments **
+
+- `input_HSseq_file`:	  A heparin sulphate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.
+- `motif_range`:  Describe a vector having lower limit and upperlimit of the motifs to be discovered.
+- `charGrpFile`: (Optional parameter) File having two columns , \emph{One}- dimers/trimers/tetramers that should be considered as single characters to discover motif,  \emph{Two}- character group information in numeric form. In heparin sulphate dimer and trimer occupy alternate positions are. So, dimers are grouped in one group and trimers are grouped in other group. If this file is not given then each character will be considered independently to discover motif as other motif discovery tools such as MEME, do.
+- `seq_weight_file`: (Optional parameter) File having column of sequence header and sequence weight in motif discovery. If this file is not selected then all sequences have equal weight in motif discovery.
+- `numCores`  (Optional parameter) the number of cores to be used. This feature is useful when motif is discovered in large range. Multiple cores feature will not work on widows computer or RStudio environment.
+
+**Details**
+The dataset is rotatated by a given angle along the Y-axis and a Stereoscopic 3D scatter plot image is created.
+
+**Value**
+
+- Create Stereoscopic 3D plot with `input data filename prefix` and `_Stereo.pdf` extention.
+- Interactive 3D plot for the above image pops up, which can be zoomed and rotated by draging the mouse.
+
+**Examples**
+
+```
+> HSSeq_file=system.file("extdata", "Ex_simulated_HSseqs_new_M1c_and_M3c_S100E.txt", package = "HSMotifDiscover", mustWork = TRUE)
+> charGrpFile=system.file("extdata", "Chars.txt", package = "HSMotifDiscover", mustWork = TRUE)
+> seq_weight_file=system.file("extdata", "motif1c_Weight.txt", package = "HSMotifDiscover", mustWork = TRUE)
+> motif_range=c(5,7)   # motif length range
+> out=HSMotifDiscover(input_HSseq_file=HSSeq_file, motif_range=motif_range, charGrpFile=charGrpFile, seq_weight_file=seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)
+```
+

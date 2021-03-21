@@ -1,0 +1,40 @@
+Package: HSMotifDiscover
+Type: Package
+Title: Discover motif in heparan sulphate sequences or any type of sequnces.
+Version: 0.1.0
+Author: Vinod Kumar Singh
+Maintainer: The package maintainer <vinod.acear@gmail.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends:
+  R (>= 3.6.3),
+  ggseqlogo,
+  ggplot2,
+  Biostrings,
+  parallel,
+  tools,
+  MASS,
+  GenomicRanges,
+  Biostrings,
+  ggpubr,
+  randomcoloR,
+  DT,
+  DescTools,
+  BiocManager,
+  readtext,
+  greekLetters,
+  utils,
+  plyr
+RoxygenNote: 7.1.1
+Suggests:
+    devtools,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+URL: https://github.com/bioinfoDZ/HSMotifDiscover
+BugReports: https://github.com/bioinfoDZ/HSMotifDiscover/issues
+Config/testthat/edition: 3
