@@ -27,7 +27,7 @@
 #'      \item \emph{if sequence weight is greater than the threshold:} boolean (TRUE/FALSE). This column is present only of weight of the sequences is given as input.
 #'      \item \emph{max_score:} Maximum likelihood score of the of the PSSM in the sequnce.
 #'      \item \emph{P_value:} The probability that a random sequence (with the same length and conforming to the background) would have position p-values such that the product is smaller or equal to the value calculated for the sequence under test.
-#'      \item \emph{MotifLoc:} Start point of discovered motif. (This is the location max_score )
+#'      \item \emph{MotifLoc:} Start point of discovered motif. (This is the location of max_score in the sequence )
 #'      \item \emph{seq_weights:} Input weights of the sequnces. This column is present only if weight of the sequences is given as input.
 #'      \item \emph{score:} Liklihood score of the PSSM at different sequence locations.
 #'  }

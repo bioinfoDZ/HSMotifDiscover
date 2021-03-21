@@ -17,14 +17,14 @@ hexuronic acids and glucosamines generate HS motifs that are responsible
 for the functions of HS sequences. Therefore, HS sequences are different
 from the nucleic or protein sequences in at least three ways:
 
--   `` Each position is composed of a saccharide that can be modified in
+-   Each position is composed of a saccharide that can be modified in
     either one or two ways, resulting in a two- (“dimer”) or
     three-letter (“trimer”) representation for the types of saccharide
     and the chemical modifications.
--   `` The dimer and trimer are present alternatively as disaccharides
-    in the HS sequences.
--   `` The motifs may be consisted of either same HS residues/types or
-    same chemical modifications on different HS residues.
+-   The dimer and trimer are present alternatively as disaccharides in
+    the HS sequences.
+-   The motifs may be consisted of either same HS residues/types or same
+    chemical modifications on different HS residues.
 
 HSMotifDiscover tool considers these unique properties in searching for
 enriched motifs in HS sequences. It first maps the saccharides to
@@ -114,7 +114,7 @@ sequences.
     discovery.
 -   `numCores` (*Optional parameter*) the number of cores to be used.
     This feature is useful when motif is discovered in large range. **In
-    the current version, multiple cores feature will not work on windows
+    the current version, multiple cores feature may not work on windows
     computer or RStudio environment.**
 -   `affinity_threshold`: (*Optional parameter*) The sequences with
     weight greater than the threshold are used for motif discovery. This
@@ -151,7 +151,7 @@ sequences.
             position p-values such that the product is smaller or equal
             to the value calculated for the sequence under test.
         -   `MotifLoc:` Start point of discovered motif. (This is the
-            location max\_score )
+            location of max\_score in the sequence )
         -   `seq_weights:` Input weights of the sequnces. This column is
             present only of weight of the sequences is given as input.
         -   `score:` Liklihood score of the PSSM at different sequence
