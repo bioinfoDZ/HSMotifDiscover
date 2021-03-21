@@ -19,7 +19,7 @@ HSMotifDiscover(
 
 \item{motifLenVec}{Describe a vector of the motif lenghts to be discovered.}
 
-\item{charGrpFile}{(Optional parameter) File having two columns , \emph{One}- dimers/trimers/tetramers that should be considered as single characters to discover motif,  \emph{Two}- character group information in numeric form. In heparin sulphate dimer and trimer occupy alternate positions are. So, dimers are grouped in one group and trimers are grouped in other group. If this file is not given then each character will be considered independently to discover motif as other motif discovery tools such as MEME, but will work for any other type of characters.}
+\item{charGrpFile}{(Optional parameter) File having two columns , \emph{One}- dimers/trimers/tetramers that should be considered as single characters to discover motif,  \emph{Two}- character group information in numeric form. In heparin sulphate dimer and trimer occupy alternate positions are. So, dimers are grouped in one group and trimers are grouped in other group. If this file is not given then each character will be considered independently to discover motif similar to other available motif discovery tools such as \href{https://meme-suite.org/meme/tools/meme}{MEME}. However, this tool has advantage over MEME discovery tool that it can be used for any type of characters.}
 
 \item{seq_weight_file}{(Optional parameter) File having column of sequence header and sequence weight in motif discovery. If this file is not selected then all sequences have equal weight in motif discovery.}
 
