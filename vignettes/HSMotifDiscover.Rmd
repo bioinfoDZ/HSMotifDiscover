@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-
+![""](./main.png)  
 
 ## 1. Introduction:
 Motif discovery from a given set of linear sequences is a common computational problem. Many motif discovery tools and software are available for finding motifs in DNA, RNA and protein sequences. These software find motifs significantly enriched in the sequences composed of single alphabet letters. However, motifs in some other biological contents may not be consisted of single letters, for example, chemical modifications on DNA or proteins. Here, we describe our “HSMotifDiscover” tool that utilizes Gibbs Sampling algorithm to find motifs in heparan sulphate (HS) sequences. HS sequences are linear glycans of repeating disaccharides composed of hexuronic acids and N-acetyle-glucosamines and added to membrane or extracellular proteins to form specific proteoglycans. Further sulphate modifications on the hexuronic acids and glucosamines generate HS motifs that are responsible for the functions of HS sequences. Therefore, HS sequences are different from the nucleic or protein sequences in at least three ways:
