@@ -2,8 +2,8 @@
 title: "HSMotifDiscover"
 author: "Vinod Kumar Singh and Deyou Zheng"
 output:
-  rmarkdown::html_vignette:
-    toc: true
+  md_document:
+    variant: markdown_github
     
 vignette: >
   %\VignetteIndexEntry{HSMotifDiscover}
