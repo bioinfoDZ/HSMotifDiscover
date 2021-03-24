@@ -57,7 +57,7 @@ Discovers motif in heparan sulphate sequences or any other type of sequences.
 
 `HSMotifDiscover(input_HSseq_file, motif_range,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)`
 
-**Arguments **
+**Arguments**
 
 - `input_HSseq_file`:	  A heparin sulphate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.
 - `motifLenVec`:  Describe a vector of the motif lenghts to be discovered.

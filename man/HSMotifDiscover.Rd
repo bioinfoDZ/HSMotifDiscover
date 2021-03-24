@@ -23,7 +23,7 @@ HSMotifDiscover(
 
 \item{seq_weight_file}{(Optional parameter) File having column of sequence header and sequence weight in motif discovery. If this file is not selected then all sequences have equal weight in motif discovery.}
 
-\item{numCores}{(Optional parameter) the number of cores to be used. This feature is useful when motif is discovered in large range. Multiple cores feature may not work on widows computer or RStudio environment.}
+\item{numCores}{(Optional parameter) the number of cores to be used. This feature is useful when motif is discovered in large range. Multiple cores feature will not work on widows computer or RStudio environment.}
 
 \item{affinity_threshold}{(Optional parameter) The sequences with weight greater than the threshold are used for motif discovery. This is required only of weight file is given.}
 
@@ -49,7 +49,7 @@ HSMotifDiscover(
      \item \emph{if sequence weight is greater than the threshold:} boolean (TRUE/FALSE). This column is present only of weight of the sequences is given as input.
      \item \emph{max_score:} Maximum likelihood score of the of the PSSM in the sequnce.
      \item \emph{P_value:} The probability that a random sequence (with the same length and conforming to the background) would have position p-values such that the product is smaller or equal to the value calculated for the sequence under test.
-     \item \emph{MotifLoc:} Start point of discovered motif. (This is the location max_score )
+     \item \emph{MotifLoc:} Start point of discovered motif. (This is the location of max_score in the sequence )
      \item \emph{seq_weights:} Input weights of the sequnces. This column is present only if weight of the sequences is given as input.
      \item \emph{score:} Liklihood score of the PSSM at different sequence locations.
  }
