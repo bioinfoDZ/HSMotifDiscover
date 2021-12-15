@@ -1,6 +1,6 @@
 Package: HSMotifDiscover
 Type: Package
-Title: Discover motif in heparan sulphate sequences or any type of sequnces.
+Title: Discover motif in Heparan sulfate sequences or any type of sequences.
 Version: 0.1.0
 Author: Vinod Kumar Singh
 Maintainer: The package maintainer <vinod.acear@gmail.com>
@@ -27,8 +27,9 @@ Depends:
   readtext,
   greekLetters,
   utils,
-  plyr
-RoxygenNote: 7.1.1
+  plyr,
+  universalmotif
+RoxygenNote: 7.1.2
 Suggests:
     devtools,
     knitr,

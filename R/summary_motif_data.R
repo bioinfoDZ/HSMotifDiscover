@@ -1,4 +1,4 @@
-summary_motif_data <- function(motif_data)
+summary_motif_data <- function(motif_data, if_revCompStrand)
 {
 
     print('in > summary_motif_data')
@@ -31,12 +31,9 @@ summary_motif_data <- function(motif_data)
 
     rand_colors=c28[seq(1,length(UC))]
     cs1 = make_col_scheme(chars=UC,  cols=rand_colors)
-    p1= ggseqlogo(motif_data$orgChar_discoveredMotifs[des_motifs_ind], namespace=UC,  method='b', col_scheme=cs1)
-
-    # https://stackoverflow.com/questions/9563711/r-color-palettes-for-many-data-classes
-
-    #uniqchars <- function(x) unique(strsplit(x, "")[[1]])  # alternate
-    #unique_letters=uniqchars(paste0(motif_data$orginal_char,collapse = '' ))
+    p1= ggseqlogo(motif_data$orgChar_discoveredMotifs[des_motifs_ind], namespace=UC,  method='b', col_scheme=cs1) + ylim(0,log2(length(UC)))
+    
+   
     motif_data$motif_DesiredSeqsName=motif_data$seqs[des_motifs_ind]
     seqsT=BStringSet(motif_data$orgChar_discoveredMotifs[des_motifs_ind])
     unique_letters=uniqueLetters(seqsT)
@@ -47,7 +44,13 @@ summary_motif_data <- function(motif_data)
     motif_data$MotifEntropy=Entropy(PSSM)     #sum(sapply(seq(1,ncol(PSSM)), function(x) Entropy(PSSM[,x])))
     motif_data$IC=signif(log2(length(unique_letters))-mean(sapply(seq(1,ncol(PSSM)), function(x) Entropy(PSSM[,x]))),3)
     motif_data$MotifLogo=p1
-
+    motif_data$ReverseComplement_PSSM=reverseComplement(PSSM)
+    
+    if(if_revCompStrand==TRUE){
+        rc_p1= ggseqlogo(as.vector(reverseComplement(DNAStringSet(motif_data$orgChar_discoveredMotifs[des_motifs_ind]))), namespace=UC,  method='b', col_scheme=cs1)+ ylim(0,2)
+        motif_data$ReverseComplement_MotifLogo=rc_p1
+    }
+    
 
     mapC_p1=ggseqlogo(motif_data$mapChar_discoveredMotifs[des_motifs_ind], namespace=motif_data$CharData$mapped_char, method='b')
     mapC_seqsT=BStringSet(motif_data$mapChar_discoveredMotifs[des_motifs_ind])
@@ -61,9 +64,11 @@ summary_motif_data <- function(motif_data)
 
     motif_data$mapC_IC=signif(log2(length(mapC_unique_letters))-mean(sapply(seq(1,ncol(mapC_PSSM)), function(x) Entropy(mapC_PSSM[,x]))),3)     #sum(sapply(seq(1,ncol(PSSM)), function(x) Entropy(PSSM[,x])))
     motif_data$mapC_MotifLogo=mapC_p1
+    
+    motif_data$motif_Obj=UVmotif_Obj(motif_data$mapC_PSSM, motif_data$final_bkg_vec, CharDataf=motif_data$CharData )
 
-    motif_data$P_value_para=P_value_cal(motif_data$mapC_PSSM,motif_data$final_bkg_vec, motif_width=ncol(mapC_PSSM), CharDataf=motif_data$CharData)
-
+    print('out > summary_motif_data')
+    
     return(motif_data)
 }
 

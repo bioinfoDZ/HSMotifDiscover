@@ -11,11 +11,12 @@ HSMotifDiscover(
   seq_weight_file,
   numCores = 1,
   affinity_threshold = 0,
-  itr = 40000
+  itr = 40000,
+  if_revCompStrand = FALSE
 )
 }
 \arguments{
-\item{input_HSseq_file}{A heparin sulphate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.}
+\item{input_HSseq_file}{A Heparin Sulfate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.}
 
 \item{motifLenVec}{Describe a vector of the motif lenghts to be discovered.}
 
@@ -28,6 +29,8 @@ HSMotifDiscover(
 \item{affinity_threshold}{(Optional parameter) The sequences with weight greater than the threshold are used for motif discovery. This is required only of weight file is given.}
 
 \item{itr}{(Optional parameter) Number of iterations for gibbs sampling optimisation. Higher itrations may improve the results but at the cost of time.}
+
+\item{if_revCompStrand}{logical variable, TURE if reverse complementry strand should also be considered while motif discovery  (In case of DNA sequnces only). Deafault value is FALSE}
 }
 \value{
 \enumerate{
@@ -52,14 +55,15 @@ HSMotifDiscover(
      \item \emph{MotifLoc:} Start point of discovered motif. (This is the location of max_score in the sequence )
      \item \emph{seq_weights:} Input weights of the sequnces. This column is present only if weight of the sequences is given as input.
      \item \emph{score:} Liklihood score of the PSSM at different sequence locations.
+     \item \emph{RC_strand:} '1' if motif is present on reverse complementry strand (Only in case of DNA sequences).
  }
  }
- \item \emph{MotifSummary_runTime_*.txt:} Summary of motifs in the text file.
- \item \emph{log_runTime_*.txt:} log file of the run.
+ \item \emph{MotifSummary_runTime_*.txt:} Summary of motifs in the text file. (* is the time of run)
+ \item \emph{log_runTime_*.txt:} log file of the run. (* is the time of run)
  }
 }
 \description{
-Discover motif in heparan sulphate sequences or any type of sequnces.
+Discover motif in Heparan Sulphate (HS) sequences or any type of sequnces.
 }
 \details{
 Discover motif in heparan sulphate sequences or any type of sequnces.
@@ -73,6 +77,12 @@ motifLenVec=c(5,7)   # motif length range
 
 out=HSMotifDiscover(input_HSseq_file=HSSeq_file, motifLenVec=motifLenVec, charGrpFile=charGrpFile,
 seq_weight_file=seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)
+
+###for DNA sequences ##
+DNASeq_file=system.file("extdata", "SRF_syntheticSeqFile_Test.txt",
+package = "HSMotifDiscover", mustWork = TRUE)
+outDNA=HSMotifDiscover(input_HSseq_file=DNASeq_file, motifLenVec=10,
+      numCores=1,  itr=50000, if_revCompStrand=TRUE)
 
 
 }

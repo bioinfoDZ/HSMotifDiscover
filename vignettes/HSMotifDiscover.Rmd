@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 ![""](./main.png)  
 
 ## 1. Introduction:
-Motif discovery from a given set of linear sequences is a common computational problem. Many motif discovery tools and software are available for finding motifs in DNA, RNA and protein sequences. These software find motifs significantly enriched in the sequences composed of single alphabet letters. However, motifs in some other biological contents may not be consisted of single letters, for example, chemical modifications on DNA or proteins. Here, we describe our “HSMotifDiscover” tool that utilizes Gibbs Sampling algorithm to find motifs in heparan sulphate (HS) sequences. HS sequences are linear glycans of repeating disaccharides composed of hexuronic acids and N-acetyle-glucosamines and added to membrane or extracellular proteins to form specific proteoglycans. Further sulphate modifications on the hexuronic acids and glucosamines generate HS motifs that are responsible for the functions of HS sequences. Therefore, HS sequences are different from the nucleic or protein sequences in at least three ways:
+Motif discovery from a given set of linear sequences is a common computational problem. Many motif discovery tools and software are available for finding motifs in DNA, RNA and protein sequences. These software find motifs significantly enriched in the sequences composed of single alphabet letters. However, motifs in some other biological contents may not be consisted of single letters, for example, chemical modifications on DNA or proteins. Here, we describe our “HSMotifDiscover” tool that utilizes Gibbs Sampling algorithm to find motifs in Heparan Sulfate (HS) sequences. HS sequences are linear glycans of repeating disaccharides composed of hexuronic acids and N-acetyle-glucosamines and added to membrane or extracellular proteins to form specific proteoglycans. Further sulfate modifications on the hexuronic acids and glucosamines generate HS motifs that are responsible for the functions of HS sequences. Therefore, HS sequences are different from the nucleic or protein sequences in at least three ways:
 
  - Each position is composed of a saccharide that can be modified in either one or two ways, resulting in a two- (“dimer”) or three-letter (“trimer”) representation for the types of saccharide and the chemical modifications.
  - The dimer and trimer are present alternatively as disaccharides in the HS sequences.
@@ -35,7 +35,7 @@ However, the HSMotifDiscover algorithm is not limited to HS sequences only. It c
 
 
 ## 2. Concept:
-The HS sequences are diffrent from  DNA, RNA and protein sequences in a few ways. So, the Gibbs-Sampling algorithm has been implemented in such a way, it can discover motifs in the heparan sulphate (HS) sequences. 
+The HS sequences are diffrent from  DNA, RNA and protein sequences in a few ways. So, the Gibbs-Sampling algorithm has been implemented in such a way, it can discover motifs in the Heparan Sulfate (HS) sequences. 
 
 
 ## 3. Availability and Installation
@@ -51,21 +51,22 @@ devtools::install_github("bioinfoDZ/HSMotifDiscover",build_vignettes = FALSE )
 
 **Description**
 
-Discovers motif in heparan sulphate sequences or any other type of sequences.
+Discovers motif in Heparan Sulfate sequences or any other type of sequences.
 
 **Usage**
 
-`HSMotifDiscover(input_HSseq_file, motif_range,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)`
+`HSMotifDiscover(input_HSseq_file, motif_range,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)` .
 
 **Arguments**
 
-- `input_HSseq_file`:	  A heparin sulphate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.
+- `input_HSseq_file`:	  A Heparin Sulfate sequence (or any other seqeuence) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.
 - `motifLenVec`:  Describe a vector of the motif lenghts to be discovered.
-- `charGrpFile`: (_Optional parameter_) File having two columns , **One**- dimers/trimers/tetramers that should be considered as single characters to discover motif,  **Two**- character group information in numeric form. In heparin sulphate dimer and trimer occupy alternate positions are. So, dimers are grouped in one group and trimers are grouped in other group. If this file is not given then each character will be considered independently to discover motif similar to other available motif discovery tools such as  [MEME ](https://meme-suite.org/meme/tools/meme). However, this tool has advantage over MEME discovery tool that it can be used for any type of characters.
+- `charGrpFile`: (_Optional parameter_) File having two columns , **One**- dimers/trimers/tetramers that should be considered as single characters to discover motif,  **Two**- character group information in numeric form. In Heparin Sulfate dimer and trimer occupy alternate positions are. So, dimers are grouped in one group and trimers are grouped in other group. If this file is not given then each character will be considered independently to discover motif similar to other available motif discovery tools such as  [MEME ](https://meme-suite.org/meme/tools/meme). However, this tool has advantage over MEME discovery tool that it can be used for any type of characters.
 - `seq_weight_file`: (_Optional parameter_) File having column of sequence header and sequence weight in motif discovery. If this file is not selected then all sequences have equal weight in motif discovery.
 - `numCores`  (_Optional parameter_) the number of cores to be used. This feature is useful when motif is discovered in large range. **In the current version, multiple cores feature may not work on windows computer or RStudio environment.**
 - `affinity_threshold`: (_Optional parameter_) The sequences with weight greater than the threshold are used for motif discovery. This is required only of weight file is given.
 - `itr`: (_Optional parameter_) Number of iterations for gibbs sampling optimisation. Higher itrations may improve the results but at the cost of time.
+- `if_revCompStrand`:logical variable, TURE if reverse complementry strand should also be considered while motif discovery  (In case of DNA sequnces only). Deafault value is FALSE
 
 
 
@@ -89,9 +90,10 @@ Discovers motif in heparan sulphate sequences or any other type of sequences.
         - `MotifLoc:` Start point of discovered motif. (This is the location of max_score in the sequence )
         - `seq_weights:` Input weights of the sequnces. This column is present only of weight of the sequences is given as input.
         - `score:` Liklihood score of the PSSM at different sequence locations.
+        - `RC_strand:` '1' if motif is present on reverse complementry strand (Only in case of DNA sequences).
 
-2.  `MotifSummary_runTime_*.txt:` Summary of motifs in the text file.
-3.  `log_runTime_*.txt:` log file of the run.
+2.  `MotifSummary_runTime_*.txt:` Summary of motifs in the text file. (* is the time of run)
+3.  `log_runTime_*.txt:` log file of the run. (* is the time of run)
 
 **Examples**
 
@@ -105,5 +107,13 @@ Discovers motif in heparan sulphate sequences or any other type of sequences.
 > out=HSMotifDiscover(input_HSseq_file=HSSeq_file, motifLenVec=motifLenVec, 
                       charGrpFile=charGrpFile, seq_weight_file=seq_weight_file, 
                       numCores=1,  affinity_threshold=0,  itr=40000)
+                      
+##for DNA sequences ##
+        
+> DNASeq_file=system.file("extdata", "SRF_syntheticSeqFile_Test.txt", 
+                  package = "HSMotifDiscover", mustWork = TRUE)
+> outDNA=HSMotifDiscover(input_HSseq_file=DNASeq_file, 
+                  motifLenVec=10, numCores=1, itr=50000, if_revCompStrand=TRUE)
+  
 ```
 

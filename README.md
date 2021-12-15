@@ -1,3 +1,8 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 ![""](./main.png)
 
 1. Introduction:
@@ -11,10 +16,10 @@ single alphabet letters. However, motifs in some other biological
 contents may not be consisted of single letters, for example, chemical
 modifications on DNA or proteins. Here, we describe our
 “HSMotifDiscover” tool that utilizes Gibbs Sampling algorithm to find
-motifs in heparan sulphate (HS) sequences. HS sequences are linear
+motifs in Heparan Sulfate (HS) sequences. HS sequences are linear
 glycans of repeating disaccharides composed of hexuronic acids and
 N-acetyle-glucosamines and added to membrane or extracellular proteins
-to form specific proteoglycans. Further sulphate modifications on the
+to form specific proteoglycans. Further sulfate modifications on the
 hexuronic acids and glucosamines generate HS motifs that are responsible
 for the functions of HS sequences. Therefore, HS sequences are different
 from the nucleic or protein sequences in at least three ways:
@@ -63,7 +68,7 @@ of motifs.
 
 The HS sequences are diffrent from DNA, RNA and protein sequences in a
 few ways. So, the Gibbs-Sampling algorithm has been implemented in such
-a way, it can discover motifs in the heparan sulphate (HS) sequences.
+a way, it can discover motifs in the heparan sulfate (HS) sequences.
 
 3. Availability and Installation
 --------------------------------
@@ -84,16 +89,16 @@ devtools::install_github("bioinfoDZ/HSMotifDiscover",build_vignettes = FALSE )
 
 **Description**
 
-Discovers motif in heparan sulphate sequences or any other type of
+Discovers motif in heparan sulfate sequences or any other type of
 sequences.
 
 **Usage**
 
-`HSMotifDiscover(input_HSseq_file, motif_range,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)`
+`HSMotifDiscover(input_HSseq_file, motif_range,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000, if_revCompStrand=FALSE)`
 
 **Arguments **
 
--   `input_HSseq_file`: A heparin sulphate sequence (or any other
+-   `input_HSseq_file`: A heparin sulfate sequence (or any other
     seqeunce) file. The file contains header and sequence information of
     the samples similar to fasta file, but sequence character counts per
     line are not constrained.
@@ -102,7 +107,7 @@ sequences.
 -   `charGrpFile`: (*Optional parameter*) File having two columns ,
     **One**- dimers/trimers/tetramers that should be considered as
     single characters to discover motif, **Two**- character group
-    information in numeric form. In heparin sulphate dimer and trimer
+    information in numeric form. In heparin sulfate dimer and trimer
     occupy alternate positions are. So, dimers are grouped in one group
     and trimers are grouped in other group. If this file is not given
     then each character will be considered independently to discover
@@ -124,6 +129,7 @@ sequences.
 -   `itr`: (*Optional parameter*) Number of iterations for gibbs
     sampling optimisation. Higher itrations may improve the results but
     at the cost of time.
+-   `if_revCompStrand`: logical variable, TURE if reverse complementry strand should also be considered while motif discovery (In case of DNA sequnces only).        Deafault value is FALSE
 
 **Value**
 
@@ -158,8 +164,9 @@ sequences.
             present only of weight of the sequences is given as input.
         -   `score:` Liklihood score of the PSSM at different sequence
             locations.
-2.  `MotifSummary_runTime_*.txt:` Summary of motifs in the text file.
-3.  `log_runTime_*.txt:` log file of the run.
+        -   `RC_strand`: '1' if motif is present on reverse complementry strand (Only in case of DNA sequences).
+2.  `MotifSummary_runTime_*.txt:` Summary of motifs in the text file.(* is the time of run)
+3.  `log_runTime_*.txt:` log file of the run.(* is the time of run)
 
 **Examples**
 
@@ -170,5 +177,14 @@ sequences.
                           package = "HSMotifDiscover", mustWork = TRUE)
     > motifLenVec=c(5,7)   # motif length range
     > out=HSMotifDiscover(input_HSseq_file=HSSeq_file, motifLenVec=motifLenVec, 
-                          charGrpFile=charGrpFile, seq_weight_file=seq_weight_file, 
-                          numCores=1,  affinity_threshold=0,  itr=40000)
+                          charGrpFile=charGrpFile, seq_weight_file=seq_weight_file,
+                          numCores=1,  affinity_threshold=0,  
+                          itr=40000, if_revCompStrand=FALSE)
+                          
+      ##for DNA sequences ##
+        
+    > DNASeq_file=system.file("extdata", "SRF_syntheticSeqFile_Test.txt", 
+                  package = "HSMotifDiscover", mustWork = TRUE)
+    > outDNA=HSMotifDiscover(input_HSseq_file=DNASeq_file, 
+                  motifLenVec=10, numCores=1, itr=50000, if_revCompStrand=TRUE)
+  

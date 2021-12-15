@@ -1,13 +1,14 @@
 #' @title  HSMotifDiscover
 #'
-#' @description  Discover motif in heparan sulphate sequences or any type of sequnces.
-#' @param input_HSseq_file A heparin sulphate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.
+#' @description  Discover motif in Heparan Sulphate (HS) sequences or any type of sequnces.
+#' @param input_HSseq_file A Heparin Sulfate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.
 #' @param motifLenVec Describe a vector of the motif lenghts to be discovered.
 #' @param charGrpFile (Optional parameter) File having two columns , \emph{One}- dimers/trimers/tetramers that should be considered as single characters to discover motif,  \emph{Two}- character group information in numeric form. In heparin sulphate dimer and trimer occupy alternate positions are. So, dimers are grouped in one group and trimers are grouped in other group. If this file is not given then each character will be considered independently to discover motif as other motif discovery tools such as MEME, but will work for any other type of characters.
 #' @param seq_weight_file  (Optional parameter) File having column of sequence header and sequence weight in motif discovery. If this file is not selected then all sequences have equal weight in motif discovery.
 #' @param numCores  (Optional parameter) the number of cores to be used. This feature is useful when motif is discovered in large range. Multiple cores feature will not work on widows computer or RStudio environment.
 #' @param affinity_threshold  (Optional parameter) The sequences with weight greater than the threshold are used for motif discovery. This is required only of weight file is given.
 #' @param itr  (Optional parameter) Number of iterations for gibbs sampling optimisation. Higher itrations may improve the results but at the cost of time.
+#' @param if_revCompStrand logical variable, TURE if reverse complementry strand should also be considered while motif discovery  (In case of DNA sequnces only). Deafault value is FALSE
 #' @return \enumerate{
 #' \item \emph{list} A list of following parameters of all the discovered motifs in the given range.
 #' \enumerate{
@@ -30,10 +31,11 @@
 #'      \item \emph{MotifLoc:} Start point of discovered motif. (This is the location of max_score in the sequence )
 #'      \item \emph{seq_weights:} Input weights of the sequnces. This column is present only if weight of the sequences is given as input.
 #'      \item \emph{score:} Liklihood score of the PSSM at different sequence locations.
+#'      \item \emph{RC_strand:} '1' if motif is present on reverse complementry strand (Only in case of DNA sequences).
 #'  }
 #'  }
-#'  \item \emph{MotifSummary_runTime_*.txt:} Summary of motifs in the text file.
-#'  \item \emph{log_runTime_*.txt:} log file of the run.
+#'  \item \emph{MotifSummary_runTime_*.txt:} Summary of motifs in the text file. (* is the time of run)
+#'  \item \emph{log_runTime_*.txt:} log file of the run. (* is the time of run)
 #'  }
 #' @details Discover motif in heparan sulphate sequences or any type of sequnces.
 #' @export
@@ -47,16 +49,19 @@
 #' out=HSMotifDiscover(input_HSseq_file=HSSeq_file, motifLenVec=motifLenVec, charGrpFile=charGrpFile,
 #' seq_weight_file=seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)
 #'
+#' ###for DNA sequences ##
+#' DNASeq_file=system.file("extdata", "SRF_syntheticSeqFile_Test.txt",
+#' package = "HSMotifDiscover", mustWork = TRUE)
+#' outDNA=HSMotifDiscover(input_HSseq_file=DNASeq_file, motifLenVec=10,
+#'       numCores=1,  itr=50000, if_revCompStrand=TRUE)
+#'
 #'
 
 #
-# @seealso \code{\link{vcfToSNV}} to generate \emph{snv} dataframe, and \url{https://genome.ucsc.edu/FAQ/FAQformat.html} for BED file format.
 #
 
 
-
-
-HSMotifDiscover <- function(input_HSseq_file, motifLenVec,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000)
+HSMotifDiscover <- function(input_HSseq_file, motifLenVec,  charGrpFile, seq_weight_file, numCores=1,  affinity_threshold=0,  itr=40000, if_revCompStrand=FALSE)
 {
   RunFileExt=paste0(format(Sys.time(), "%d%b%Y%H%M%S"),'.txt')
 
@@ -75,42 +80,42 @@ HSMotifDiscover <- function(input_HSseq_file, motifLenVec,  charGrpFile, seq_wei
     #motifLenVec=seq(motif_range[1], motif_range[2])
 
       if(missing(input_HSseq_file) & missing(motifLenVec)){
-        geterrmessage("input sequnce file and motif length/ range can't be left empty")
+        geterrmessage("input sequence file and motif length/ range can't be left empty")
       }
       if (missing(seq_weight_file) & missing(charGrpFile))
       {
         print('>>>C1')
         if((os_Flag=='good') & (numCores > 1) & (isRStudio== FALSE)){
-          motif_range_data_results=mclapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x, affinity_threshold=affinity_threshold,  itr=itr), mc.cores = getOption("mc.cores", 2L))
+          motif_range_data_results=mclapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x, affinity_threshold=affinity_threshold,  itr=itr, if_revCompStrand=if_revCompStrand), mc.cores = getOption("mc.cores", 2L))
         }else(
-          motif_range_data_results=lapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x,  affinity_threshold=affinity_threshold,  itr=itr))
+          motif_range_data_results=lapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x,  affinity_threshold=affinity_threshold,  itr=itr, if_revCompStrand=if_revCompStrand))
         )
       }
       if(missing(seq_weight_file) & !missing(charGrpFile))
       {
         print('>>>C2')
         if((os_Flag=='good') & (numCores > 1) & (isRStudio== FALSE)){
-          motif_range_data_results=mclapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x, charGrpFile=charGrpFile, affinity_threshold=affinity_threshold, itr=itr),mc.cores = getOption("mc.cores", 2L) )
+          motif_range_data_results=mclapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x, charGrpFile=charGrpFile, affinity_threshold=affinity_threshold, itr=itr, if_revCompStrand=if_revCompStrand),mc.cores = getOption("mc.cores", 2L) )
         }else(
-          motif_range_data_results=lapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x,  charGrpFile=charGrpFile, affinity_threshold=affinity_threshold,  itr=itr))
+          motif_range_data_results=lapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x,  charGrpFile=charGrpFile, affinity_threshold=affinity_threshold,  itr=itr, if_revCompStrand=if_revCompStrand))
         )
       }
       if(!missing(seq_weight_file) & missing(charGrpFile))
       {
         print('>>>C3')
         if((os_Flag=='good') & (numCores > 1) & (isRStudio== FALSE)){
-          motif_range_data_results=mclapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x,  seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold,  itr=itr), mc.cores = getOption("mc.cores", 2L))
+          motif_range_data_results=mclapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x,  seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold,  itr=itr, if_revCompStrand=if_revCompStrand), mc.cores = getOption("mc.cores", 2L))
         }else(
-          motif_range_data_results=lapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x, seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold,  itr=itr))
+          motif_range_data_results=lapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x, seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold,  itr=itr, if_revCompStrand=if_revCompStrand))
         )
       }
       if(!missing(seq_weight_file) & !missing(charGrpFile))
       {
         print('>>>C4')
         if((os_Flag=='good') & (numCores > 1) & (isRStudio== FALSE)){
-          motif_range_data_results=mclapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x,  charGrpFile=charGrpFile,  seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold, itr=itr),  mc.cores = getOption("mc.cores", 2L))
+          motif_range_data_results=mclapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x,  charGrpFile=charGrpFile,  seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold, itr=itr, if_revCompStrand=if_revCompStrand),  mc.cores = getOption("mc.cores", 2L))
         }else(
-          motif_range_data_results=lapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x, charGrpFile=charGrpFile,  seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold,  itr=itr))
+          motif_range_data_results=lapply(motifLenVec , function(x) CompileResults(input_HSseq_file=input_HSseq_file, motif_length=x, charGrpFile=charGrpFile,  seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold,  itr=itr, if_revCompStrand=if_revCompStrand))
         )
       }
 
@@ -126,13 +131,14 @@ HSMotifDiscover <- function(input_HSseq_file, motifLenVec,  charGrpFile, seq_wei
         motif_range_data_results[[j]]=motif_range_data_results[[j]]$motifData
         print(paste0('Motif Length: ',motifLenVec[j] ))
         cat('\n=================\n')
-        cat('Position Specific Scoring Matrix: \n')
+        cat('Position Specific Scoring Matrix (PSSM): \n')
         print(motif_range_data_results[[j]]$PSSM)
+        cat('Reverse complementry PSSM: \n')
+        print(motif_range_data_results[[j]]$ReverseComplement_PSSM)
         cat('\nMotif statistics: \n')
-        cat(paste0('Motif Entropy: ', motif_range_data_results[[j]]$MotifEntropy,', Information Content: ',motif_range_data_results[[j]]$IC,', Motif P-value: ',signif(motif_range_data_results[[j]]$motif_Pval, 100)))
+        cat(paste0('Motif Entropy: ', motif_range_data_results[[j]]$MotifEntropy,', Information Content: ',motif_range_data_results[[j]]$IC,', Motif P-value: ',format(motif_range_data_results[[j]]$motif_Pval, digits = 4, scientific=T )))
         cat('\n\n')
         cat('\n')
-
       }
 
       names(motif_range_data_results)=paste0('MotifLength_',motifLenVec)

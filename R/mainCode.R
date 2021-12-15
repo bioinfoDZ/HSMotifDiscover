@@ -1,8 +1,6 @@
-#HS_MotifDiscoverM <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_length, seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold, characterGrpFile=characterGrpFile){
-mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_length, characterGrpFile=characterGrpFile, seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold, itr=itr){
+mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_length, characterGrpFile=characterGrpFile, seq_weight_file=seq_weight_file, affinity_threshold=affinity_threshold, itr=itr, if_revCompStrand=FALSE){
 
   print(' in > mainCode')
-
   if(missing(affinity_threshold) & !missing(seq_weight_file))
   {
     w=(read.table(file=seq_weight_file,header = TRUE))$weight
@@ -67,9 +65,9 @@ mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_lengt
   {
     oneSeq=paste(seqs, collapse = '')
     uniqchars <- function(x) unique(strsplit(x, "")[[1]])
-    CharData$orginal_char=uniqchars(oneSeq)
+    CharData$orginal_char=sort(uniqchars(oneSeq))
     CharData$mapped_char=CharData$orginal_char
-    CharData$grp=1
+    CharData$grp=rep(1,4)
     CharData$UniqueCharGrps=unique(CharData$grp)
     CharData$alphabets=paste0(CharData$mapped_char,collapse='')
     CharData$proportion=table(CharData$grp)/min(table(CharData$grp))
@@ -104,10 +102,13 @@ mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_lengt
   HSseqAlpha_data=readtext(intermediate_mapped_file)
   #HSseqAlpha_data=readtext('simulated_seqs.txt')
   HS_Alpha_seqs=strsplit(HSseqAlpha_data$text, '\n')[[1]]
+  rm(HSseqAlpha_data)
 
   header=HS_Alpha_seqs[seq(1,length(HS_Alpha_seqs),2)]
   Alpha_seqs=HS_Alpha_seqs[seq(2,length(HS_Alpha_seqs),2)]
   names(Alpha_seqs)=header
+
+  rm(HS_Alpha_seqs)
 
   unlink(intermediate_mapped_file)
 
@@ -120,7 +121,7 @@ mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_lengt
   {
     weight_df=read.table(file=seq_weight_file, header = TRUE)
     rownames(weight_df)=weight_df$SeqID
-    weight_vec=weight_df[names(all_seq_BString),2]
+    weight_vec=weight_df[names(all_seq_BString),'weight']
 
     rm_ind=which( width(all_seq_BString) <= motif_width )
     if(length(rm_ind)>0)
@@ -130,10 +131,8 @@ mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_lengt
     }
     else{
       longSeq_BString=all_seq_BString
-
     }
-
-    if(affinity_threshold > 0)
+    if(floor(affinity_threshold) > 0)
     {
       des_ind=which(weight_vec > affinity_threshold )
       #print(des_ind)
@@ -144,13 +143,14 @@ mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_lengt
       #print(weight_vec2)
       non_des_Alpha_seqs=all_seq_BString[-des_ind]
 
-    } else if(affinity_threshold == 0){
+    } else if(floor(affinity_threshold) == 0){
+      #print(paste0('AT:',affinity_threshold))
+
       des_Alpha_seqs=longSeq_BString
       seq_BString=BStringSet(des_Alpha_seqs)
       weight_vec2=data.frame(weight_vec)
       non_des_Alpha_seqs=all_seq_BString[1]   # artificially put a sequence to get rid of nul background sequence
     }
-
     colnames(weight_vec2)='V1'
     #print(weight_vec2)
 
@@ -170,6 +170,7 @@ mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_lengt
     non_des_Alpha_seqs=NULL
   }
 
+  rm(Alpha_seqs)
   #print(weight_vec)
   #motifs_seqs=subseq(seq_BString,start= motif_loc, width=7)
 
@@ -184,22 +185,25 @@ mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_lengt
     print(seq_weight_file)
     print(length(seq_BString))
 
-    motif_data=gibbs_sampling(seq_BString=seq_BString, motif_width=motif_width, des_Alpha_seqs=des_Alpha_seqs, weight_vec2=weight_vec2, unique_letters=unique_letters, CharData=CharData, ND_seq_BString=ND_seq_BString, itr=itr)
+    motif_data=gibbs_sampling(seq_BString=seq_BString, motif_width=motif_width, des_Alpha_seqs=des_Alpha_seqs, weight_vec2=weight_vec2, unique_letters=unique_letters, CharData=CharData, ND_seq_BString=ND_seq_BString, itr=itr, if_revCompStrand=if_revCompStrand)
 
     #}else if(length(non_des_Alpha_seqs)==0){
   }else if(weight==FALSE){
-    motif_data=gibbs_sampling(seq_BString=seq_BString, motif_width=motif_width, des_Alpha_seqs=des_Alpha_seqs, weight_vec2=weight_vec2, unique_letters=unique_letters, CharData=CharData, itr=itr)
-  }
 
-  motif_data=summary_motif_data(motif_data)
+    #motif_data=gibbs_sampling(seq_BString=seq_BString, motif_width=motif_width, des_Alpha_seqs=des_Alpha_seqs, weight_vec2=weight_vec2, unique_letters=unique_letters, CharData=CharData, itr=itr, if_revCompStrand=if_revCompStrand)
+    motif_data=gibbs_sampling(seq_BString=seq_BString, motif_width=motif_width, des_Alpha_seqs=des_Alpha_seqs, unique_letters=unique_letters, CharData=CharData, itr=itr, if_revCompStrand=if_revCompStrand)
+
+    }
+
+  motif_data=summary_motif_data(motif_data=motif_data, if_revCompStrand=if_revCompStrand)
 
   if(weight==TRUE)
   {
-    motif_data$seqsPval_TableData=seqs_TableData(input_HSseq_file=input_HSseq_file, motif_data=motif_data, seq_weight_file=seq_weight_file, weight_threshold=affinity_threshold)
+    motif_data$seqsPval_TableData=seqs_TableData(input_HSseq_file=input_HSseq_file, motif_data=motif_data, seq_weight_file=seq_weight_file, weight_threshold=affinity_threshold, if_revCompStrand=if_revCompStrand)
   }else if( weight==FALSE){
-    motif_data$seqsPval_TableData=seqs_TableData(input_HSseq_file=input_HSseq_file, motif_data=motif_data)
+    motif_data$seqsPval_TableData=seqs_TableData(input_HSseq_file=input_HSseq_file, motif_data=motif_data, if_revCompStrand=if_revCompStrand)
   }
 
-  print(' out > mainCode')
+  print('out > mainCode')
   return(motif_data)
 }
