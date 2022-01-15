@@ -55,14 +55,16 @@ calculate_MaxScoreInd_Of_SelectedSeq <- function(matrices_f, selected_seq_f, Cha
 
   }
 
-  norm_score = (score_vec-min(score_vec))/(max(score_vec)-min(score_vec))
-
+  #norm_score = (score_vec-min(score_vec))/(max(score_vec)-min(score_vec))
+  norm_score = score_vec/sum(score_vec)
   if(if_RC==TRUE){
-    RC_norm_score = (RC_score_vec-min(RC_score_vec))/(max(RC_score_vec)-min(RC_score_vec))
+    #RC_norm_score = (RC_score_vec-min(RC_score_vec))/(max(RC_score_vec)-min(RC_score_vec))
+    RC_norm_score=RC_score_vec/sum(RC_score_vec)
   }
 
 
   #max_ind=which(score_vec==max(score_vec))
+  #print(norm_score)
 
   sample_ind = sample(seq(1:lim), size = 1, replace = TRUE, prob = norm_score)
 
