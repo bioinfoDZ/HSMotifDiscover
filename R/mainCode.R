@@ -181,7 +181,7 @@ mainCode <- function(input_HSseq_file=input_HSseq_file, motif_length=motif_lengt
     ND_seq_BString=BStringSet(non_des_Alpha_seqs)
     #print(ND_seq_BString)
     #readline(prompt="Press [enter] to continue")
-    #weight_vec2=(weight_vec2-min(weight_vec2))/(max(weight_vec2)-min(weight_vec2))# normalise weight between 0 and 1
+    #weight_vec2=(weight_vec2-min(weight_vec2))/(max(weight_vec2)-min(weight_vec2))# normalise weight between -1 and 1
     weight_vec2=weight_vec2/sum(weight_vec2)# normalise weight between 0 and 1
 
     print(seq_weight_file)

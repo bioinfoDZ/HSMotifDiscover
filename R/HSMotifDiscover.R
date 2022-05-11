@@ -1,6 +1,6 @@
 #' @title  HSMotifDiscover
 #'
-#' @description  Discover motif in Heparan Sulphate (HS) sequences or any type of sequnces.
+#' @description  Discover motif in Heparan Sulfate (HS) sequences or any type of sequnces.
 #' @param input_HSseq_file A Heparin Sulfate sequence (or any other seqeunce) file. The file contains header and sequence information of the samples similar to fasta file, but sequence character counts per line are not constrained.
 #' @param motifLenVec Describe a vector of the motif lenghts to be discovered.
 #' @param charGrpFile (Optional parameter) File having two columns , \emph{One}- dimers/trimers/tetramers that should be considered as single characters to discover motif,  \emph{Two}- character group information in numeric form. In heparin sulphate dimer and trimer occupy alternate positions are. So, dimers are grouped in one group and trimers are grouped in other group. If this file is not given then each character will be considered independently to discover motif as other motif discovery tools such as MEME, but will work for any other type of characters.
@@ -37,7 +37,7 @@
 #'  \item \emph{MotifSummary_runTime_*.txt:} Summary of motifs in the text file. (* is the time of run)
 #'  \item \emph{log_runTime_*.txt:} log file of the run. (* is the time of run)
 #'  }
-#' @details Discover motif in heparan sulphate sequences or any type of sequnces.
+#' @details Discover motif in heparan sulfate sequences or any type of sequnces.
 #' @export
 #' @examples
 #' HSSeq_file=system.file("extdata", "Ex_simulated_HSseqs_new_M1c_and_M3c_S100E.txt",

@@ -98,7 +98,7 @@ sequences.
 
 **Arguments **
 
--   `input_HSseq_file`: A heparin sulfate sequence (or any other
+-   `input_HSseq_file`: A heparan sulfate sequence (or any other
     seqeunce) file. The file contains header and sequence information of
     the samples similar to fasta file, but sequence character counts per
     line are not constrained.
@@ -107,7 +107,7 @@ sequences.
 -   `charGrpFile`: (*Optional parameter*) File having two columns ,
     **One**- dimers/trimers/tetramers that should be considered as
     single characters to discover motif, **Two**- character group
-    information in numeric form. In heparin sulfate dimer and trimer
+    information in numeric form. In heparan sulfate dimer and trimer
     occupy alternate positions are. So, dimers are grouped in one group
     and trimers are grouped in other group. If this file is not given
     then each character will be considered independently to discover
